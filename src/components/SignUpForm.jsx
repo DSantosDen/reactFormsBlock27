@@ -3,17 +3,17 @@ import React, { useState } from "react";
 /*
 const [username, setUsername] = useState("");
 Initializes state for the username input field (username) is the state variable
-and setUsername is the function to update this state. It's initialized with an empty string.
+and (setUsername) is the function to update this state. It's initialized with an empty string.
 
 const [password, setPassword] = useState("");
 Initializes state for the password input field (password) is the state variable,
-and setPassword is the function to update this state. It's initialized with an empty string.
+and (setPassword) is the function to update this state. It's initialized with an empty string.
 
 const [error, setError] = useState(null);
 Initializes state for handling errors (error) is the state variable
 and setError is the function to update this state. It's initialized as null.
 */
-export default function SignUpForm() {
+export default function SignUpForm({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -32,7 +32,6 @@ Immediately invoked when the component renders.
     const result = await response.json();
     console.log(result);
   }
-  fetchData();
 
   /*
 async function handleSubmit(event) {...} 
@@ -41,7 +40,6 @@ It's triggered when the form is submitted.
 
 event.preventDefault();
 Prevents the default form submission behavior to avoid page reload.
-
 Makes a POST request to https://fsa-jwt-practice.herokuapp.com/signup
 with the username and password data from the state.
 Logs the response data to the console and throws an error 
@@ -62,8 +60,9 @@ and sets the error state accordingly.
           body: JSON.stringify({ username, password }),
         }
       );
-      const data = await response.json();
-      console.log(data);
+      const result = await response.json();
+      console.log(result);
+      setToken(result.token);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -72,15 +71,24 @@ and sets the error state accordingly.
     }
   }
 
+  /*
+Returns the JSX structure of the component.
+Displays an h2 with the text "Sign Up!".
+Renders a form with input fields for username and password.
+Binds the input fields to the state variables username and password and updates them onChange.
+Submits the form data to the handleSubmit function on form submission.
+*/
   return (
     <div>
       <h2>Sign Up!</h2>
+      {error && <p>Error</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Username:{" "}
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            type="text"
           />
         </label>
         <label>
